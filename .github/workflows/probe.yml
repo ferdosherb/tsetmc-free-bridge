@@ -1,0 +1,31 @@
+
+name: TSETMC Connectivity Probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0,15,30,45 5-9 * * 6-4"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tsetmc-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test TSETMC endpoints
+        run: python scripts/probe_tsetmc.py
